@@ -1,7 +1,16 @@
+import { extensions, ExtensionType } from '../../extensions/Extensions';
 import { BlendModeFilter } from './BlendModeFilter';
+
+import type { ExtensionMetadata } from '../../extensions/Extensions';
 
 export class OverlayBlend extends BlendModeFilter
 {
+    /** @ignore */
+    public static extensions: ExtensionMetadata = {
+        name: 'overlay',
+        type: ExtensionType.BlendMode
+    };
+
     constructor()
     {
         super({
@@ -52,3 +61,5 @@ export class OverlayBlend extends BlendModeFilter
         });
     }
 }
+
+extensions.add(OverlayBlend);

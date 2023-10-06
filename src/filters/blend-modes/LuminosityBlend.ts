@@ -1,9 +1,18 @@
+import { extensions, ExtensionType } from '../../extensions/Extensions';
 import { BlendModeFilter } from './BlendModeFilter';
 import { hslgl } from './hls/GLhls';
 import { hslgpu } from './hls/GPUhls';
 
+import type { ExtensionMetadata } from '../../extensions/Extensions';
+
 export class LuminosityBlend extends BlendModeFilter
 {
+    /** @ignore */
+    public static extensions: ExtensionMetadata = {
+        name: 'luminosity',
+        type: ExtensionType.BlendMode
+    };
+
     constructor()
     {
         super({
@@ -38,3 +47,5 @@ export class LuminosityBlend extends BlendModeFilter
         });
     }
 }
+
+extensions.add(LuminosityBlend);

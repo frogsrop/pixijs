@@ -1,9 +1,18 @@
 /* eslint-disable max-len */
 
+import { extensions, ExtensionType } from '../../extensions/Extensions';
 import { BlendModeFilter } from './BlendModeFilter';
+
+import type { ExtensionMetadata } from '../../extensions/Extensions';
 
 export class SoftLightBlend extends BlendModeFilter
 {
+    /** @ignore */
+    public static extensions: ExtensionMetadata = {
+        name: 'soft-light',
+        type: ExtensionType.BlendMode
+    };
+
     constructor()
     {
         super({
@@ -54,3 +63,5 @@ export class SoftLightBlend extends BlendModeFilter
         });
     }
 }
+
+extensions.add(SoftLightBlend);

@@ -1,9 +1,18 @@
 /* eslint-disable max-len */
 
+import { extensions, ExtensionType } from '../../extensions/Extensions';
 import { BlendModeFilter } from './BlendModeFilter';
+
+import type { ExtensionMetadata } from '../../extensions/Extensions';
 
 export class VividLightBlend extends BlendModeFilter
 {
+    /** @ignore */
+    public static extensions: ExtensionMetadata = {
+        name: 'vivid-light',
+        type: ExtensionType.BlendMode
+    };
+
     constructor()
     {
         super({
@@ -74,3 +83,5 @@ export class VividLightBlend extends BlendModeFilter
         });
     }
 }
+
+extensions.add(VividLightBlend);
