@@ -229,8 +229,14 @@ export abstract class DisplayObject extends EventEmitter
      *
      * Only affects recursive calls from parent. You can ask for bounds or call updateTransform manually.
      */
-    public visible: boolean;
-
+    private _visible: boolean;
+    public get visible(): boolean {
+        return this._visible;
+    }
+    public set visible(value: boolean) {
+        (window as any).pixiChanged = true;
+        this._visible = value;
+    }
     /**
      * Can this object be rendered, if false the object will not be drawn but the updateTransform
      * methods will still be called.
