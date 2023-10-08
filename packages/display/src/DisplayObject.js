@@ -61,7 +61,7 @@ export class DisplayObject extends EventEmitter
          *
          * @member {number}
          */
-        this.alpha = 1;
+        this._alpha = 1;
 
         /**
          * The visibility of the object. If false the object will not be drawn, and
@@ -71,7 +71,7 @@ export class DisplayObject extends EventEmitter
          *
          * @member {boolean}
          */
-        this.visible = true;
+        this._visible = true;
 
         /**
          * Can this object be rendered, if false the object will not be drawn but the updateTransform
@@ -81,7 +81,7 @@ export class DisplayObject extends EventEmitter
          *
          * @member {boolean}
          */
-        this.renderable = true;
+        this._renderable = true;
 
         /**
          * The display object container that contains this display object.
@@ -97,7 +97,7 @@ export class DisplayObject extends EventEmitter
          * @member {number}
          * @readonly
          */
-        this.worldAlpha = 1;
+        this._worldAlpha = 1;
 
         /**
          * Which index in the children array the display component was before the previous zIndex sort.
@@ -191,6 +191,37 @@ export class DisplayObject extends EventEmitter
          */
         this.isMask = false;
     }
+
+    get visible()
+    {
+        return this._visible;
+    }
+    set visible(value)
+    {
+        window.pixiChanged ||= this._visible !== value;
+        this._visible = value;
+    }
+
+    get renderable()
+    {
+        return this._renderable;
+    }
+    set renderable(value)
+    {
+        window.pixiChanged ||= this._renderable !== value;
+        this._renderable = value;
+    }
+
+    get alpha()
+    {
+        return this._alpha;
+    }
+    set alpha(value)
+    {
+        window.pixiChanged ||= this._alpha !== value;
+        this._alpha = value;
+    }
+
 
     /**
      * @protected
@@ -442,6 +473,17 @@ export class DisplayObject extends EventEmitter
      */
     setTransform(x = 0, y = 0, scaleX = 1, scaleY = 1, rotation = 0, skewX = 0, skewY = 0, pivotX = 0, pivotY = 0)
     {
+        window.pixiChanged =
+            (this.position.x !== x) ||
+            (this.position.y !== y) ||
+            (this.scale.x !== (!scaleX ? 1 : scaleX)) ||
+            (this.scale.y !== (!scaleY ? 1 : scaleY)) ||
+            (this.rotation !== rotation) ||
+            (this.skew.x !== skewX) ||
+            (this.skew.y !== skewY) ||
+            (this.pivot.x !== pivotX) ||
+            (this.pivot.y !== pivotY);
+
         this.position.x = x;
         this.position.y = y;
         this.scale.x = !scaleX ? 1 : scaleX;
@@ -499,6 +541,7 @@ export class DisplayObject extends EventEmitter
 
     set x(value) // eslint-disable-line require-jsdoc
     {
+        window.pixiChanged ||= this.transform.position.x !== value;
         this.transform.position.x = value;
     }
 
@@ -515,6 +558,7 @@ export class DisplayObject extends EventEmitter
 
     set y(value) // eslint-disable-line require-jsdoc
     {
+        window.pixiChanged ||= this.transform.position.y !== value;
         this.transform.position.y = value;
     }
 
@@ -553,6 +597,7 @@ export class DisplayObject extends EventEmitter
 
     set position(value) // eslint-disable-line require-jsdoc
     {
+        window.pixiChanged ||= !this.transform.position.equals(value);
         this.transform.position.copyFrom(value);
     }
 
@@ -569,6 +614,7 @@ export class DisplayObject extends EventEmitter
 
     set scale(value) // eslint-disable-line require-jsdoc
     {
+        window.pixiChanged ||= !this.transform.scale.equals(value);
         this.transform.scale.copyFrom(value);
     }
 
@@ -585,6 +631,7 @@ export class DisplayObject extends EventEmitter
 
     set pivot(value) // eslint-disable-line require-jsdoc
     {
+        window.pixiChanged ||= !this.transform.pivot.equals(value);
         this.transform.pivot.copyFrom(value);
     }
 
@@ -601,6 +648,7 @@ export class DisplayObject extends EventEmitter
 
     set skew(value) // eslint-disable-line require-jsdoc
     {
+        window.pixiChanged ||= !this.transform.skew.equals(value);
         this.transform.skew.copyFrom(value);
     }
 
@@ -617,6 +665,7 @@ export class DisplayObject extends EventEmitter
 
     set rotation(value) // eslint-disable-line require-jsdoc
     {
+        window.pixiChanged ||= this.transform.rotation !== value;
         this.transform.rotation = value;
     }
 
@@ -633,6 +682,7 @@ export class DisplayObject extends EventEmitter
 
     set angle(value) // eslint-disable-line require-jsdoc
     {
+        window.pixiChanged ||= this.rotation !== (value * DEG_TO_RAD);
         this.transform.rotation = value * DEG_TO_RAD;
     }
 
@@ -651,6 +701,7 @@ export class DisplayObject extends EventEmitter
 
     set zIndex(value) // eslint-disable-line require-jsdoc
     {
+        window.pixiChanged ||= this.zIndex !== value;
         this._zIndex = value;
         if (this.parent)
         {
@@ -707,6 +758,7 @@ export class DisplayObject extends EventEmitter
 
     set mask(value) // eslint-disable-line require-jsdoc
     {
+        window.pixiChanged ||= true;
         if (this._mask)
         {
             const maskObject = this._mask.maskObject || this._mask;

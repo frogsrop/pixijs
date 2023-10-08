@@ -212,6 +212,7 @@ export class Sprite extends Container
         {
             this.scale.y = sign(this.scale.y) * this._height / this._texture.orig.height;
         }
+        window.pixiChanged = true;
     }
 
     /**
@@ -223,6 +224,7 @@ export class Sprite extends Container
     {
         this._transformID = -1;
         this._transformTrimmedID = -1;
+        window.pixiChanged = true;
     }
 
     /**
@@ -533,6 +535,7 @@ export class Sprite extends Container
         {
             this._transformID = -1;
         }
+        window.pixiChanged ||= this._roundPixels !== value;
         this._roundPixels = value;
     }
 
@@ -556,6 +559,7 @@ export class Sprite extends Container
         const s = sign(this.scale.x) || 1;
 
         this.scale.x = s * value / this._texture.orig.width;
+        window.pixiChanged ||= this._width !== value;
         this._width = value;
     }
 
@@ -574,6 +578,7 @@ export class Sprite extends Container
         const s = sign(this.scale.y) || 1;
 
         this.scale.y = s * value / this._texture.orig.height;
+        window.pixiChanged ||= this._height !== value;
         this._height = value;
     }
 
@@ -602,6 +607,7 @@ export class Sprite extends Container
 
     set anchor(value) // eslint-disable-line require-jsdoc
     {
+        window.pixiChanged = !this._anchor.equals(value);
         this._anchor.copyFrom(value);
     }
 
@@ -619,6 +625,7 @@ export class Sprite extends Container
 
     set tint(value) // eslint-disable-line require-jsdoc
     {
+        window.pixiChanged ||= this._tint !== value;
         this._tint = value;
         this._tintRGB = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
     }
@@ -638,6 +645,8 @@ export class Sprite extends Container
         if (this._texture === value)
         {
             return;
+        } else {
+            window.pixiChanged = true;
         }
 
         if (this._texture)

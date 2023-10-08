@@ -104,6 +104,7 @@ export class Container extends DisplayObject
      */
     addChild(child)
     {
+        window.pixiChanged = true;
         const argumentsLength = arguments.length;
 
         // if there is only one argument we can bypass looping through the them
@@ -158,6 +159,8 @@ export class Container extends DisplayObject
             throw new Error(`${child}addChildAt: The index ${index} supplied is out of bounds ${this.children.length}`);
         }
 
+        window.pixiChanged = true;
+
         if (child.parent)
         {
             child.parent.removeChild(child);
@@ -194,6 +197,8 @@ export class Container extends DisplayObject
         {
             return;
         }
+
+        window.pixiChanged = true;
 
         const index1 = this.getChildIndex(child);
         const index2 = this.getChildIndex(child2);
@@ -234,6 +239,8 @@ export class Container extends DisplayObject
             throw new Error(`The index ${index} supplied is out of bounds ${this.children.length}`);
         }
 
+        window.pixiChanged = true;
+
         const currentIndex = this.getChildIndex(child);
 
         removeItems(this.children, currentIndex, 1); // remove from old position
@@ -266,6 +273,8 @@ export class Container extends DisplayObject
      */
     removeChild(child)
     {
+        window.pixiChanged = true;
+
         const argumentsLength = arguments.length;
 
         // if there is only one argument we can bypass looping through the them
@@ -309,6 +318,7 @@ export class Container extends DisplayObject
      */
     removeChildAt(index)
     {
+        window.pixiChanged = true;
         const child = this.getChildAt(index);
 
         // ensure child transform will be recalculated..
@@ -336,6 +346,7 @@ export class Container extends DisplayObject
      */
     removeChildren(beginIndex = 0, endIndex)
     {
+        window.pixiChanged = true;
         const begin = beginIndex;
         const end = typeof endIndex === 'number' ? endIndex : this.children.length;
         const range = end - begin;
@@ -379,6 +390,7 @@ export class Container extends DisplayObject
      */
     sortChildren()
     {
+        window.pixiChanged = true;
         let sortRequired = false;
 
         for (let i = 0, j = this.children.length; i < j; ++i)
@@ -642,6 +654,8 @@ export class Container extends DisplayObject
             this.scale.x = 1;
         }
 
+        window.pixiChanged = this._width !== value;
+
         this._width = value;
     }
 
@@ -667,6 +681,8 @@ export class Container extends DisplayObject
         {
             this.scale.y = 1;
         }
+
+        window.pixiChanged = this._height !== value;
 
         this._height = value;
     }
