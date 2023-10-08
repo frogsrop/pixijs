@@ -56,31 +56,10 @@ export class DisplayObject extends EventEmitter
          */
         this.transform = new Transform();
 
-        /**
-         * The opacity of the object.
-         *
-         * @member {number}
-         */
         this._alpha = 1;
 
-        /**
-         * The visibility of the object. If false the object will not be drawn, and
-         * the updateTransform function will not be called.
-         *
-         * Only affects recursive calls from parent. You can ask for bounds or call updateTransform manually.
-         *
-         * @member {boolean}
-         */
         this._visible = true;
 
-        /**
-         * Can this object be rendered, if false the object will not be drawn but the updateTransform
-         * methods will still be called.
-         *
-         * Only affects recursive calls from parent. You can ask for bounds manually.
-         *
-         * @member {boolean}
-         */
         this._renderable = true;
 
         /**
@@ -97,7 +76,7 @@ export class DisplayObject extends EventEmitter
          * @member {number}
          * @readonly
          */
-        this._worldAlpha = 1;
+        this.worldAlpha = 1;
 
         /**
          * Which index in the children array the display component was before the previous zIndex sort.
@@ -191,34 +170,52 @@ export class DisplayObject extends EventEmitter
          */
         this.isMask = false;
     }
-
+    /**
+     * The visibility of the object. If false the object will not be drawn, and
+     * the updateTransform function will not be called.
+     *
+     * Only affects recursive calls from parent. You can ask for bounds or call updateTransform manually.
+     *
+     * @member {boolean}
+     */
     get visible()
     {
         return this._visible;
     }
-    set visible(value)
+    set visible(value) // eslint-disable-line require-jsdoc
     {
-        window.pixiChanged ||= this._visible !== value;
+        PIXI.pixiChanged = PIXI.pixiChanged || (this._visible !== value);
         this._visible = value;
     }
-
+    /**
+     * Can this object be rendered, if false the object will not be drawn but the updateTransform
+     * methods will still be called.
+     *
+     * Only affects recursive calls from parent. You can ask for bounds manually.
+     *
+     * @member {boolean}
+     */
     get renderable()
     {
         return this._renderable;
     }
-    set renderable(value)
+    set renderable(value) // eslint-disable-line require-jsdoc
     {
-        window.pixiChanged ||= this._renderable !== value;
+        PIXI.pixiChanged = PIXI.pixiChanged || (this._renderable !== value);
         this._renderable = value;
     }
-
+    /**
+     * The opacity of the object.
+     *
+     * @member {number}
+     */
     get alpha()
     {
         return this._alpha;
     }
-    set alpha(value)
+    set alpha(value) // eslint-disable-line require-jsdoc
     {
-        window.pixiChanged ||= this._alpha !== value;
+        PIXI.pixiChanged = PIXI.pixiChanged || (this._alpha !== value);
         this._alpha = value;
     }
 
@@ -473,7 +470,7 @@ export class DisplayObject extends EventEmitter
      */
     setTransform(x = 0, y = 0, scaleX = 1, scaleY = 1, rotation = 0, skewX = 0, skewY = 0, pivotX = 0, pivotY = 0)
     {
-        window.pixiChanged =
+        PIXI.pixiChanged =
             (this.position.x !== x) ||
             (this.position.y !== y) ||
             (this.scale.x !== (!scaleX ? 1 : scaleX)) ||
@@ -541,7 +538,7 @@ export class DisplayObject extends EventEmitter
 
     set x(value) // eslint-disable-line require-jsdoc
     {
-        window.pixiChanged ||= this.transform.position.x !== value;
+        PIXI.pixiChanged = PIXI.pixiChanged || (this.transform.position.x !== value);
         this.transform.position.x = value;
     }
 
@@ -558,7 +555,7 @@ export class DisplayObject extends EventEmitter
 
     set y(value) // eslint-disable-line require-jsdoc
     {
-        window.pixiChanged ||= this.transform.position.y !== value;
+        PIXI.pixiChanged = PIXI.pixiChanged || (this.transform.position.y !== value);
         this.transform.position.y = value;
     }
 
@@ -597,7 +594,7 @@ export class DisplayObject extends EventEmitter
 
     set position(value) // eslint-disable-line require-jsdoc
     {
-        window.pixiChanged ||= !this.transform.position.equals(value);
+        PIXI.pixiChanged = PIXI.pixiChanged || (!this.transform.position.equals(value));
         this.transform.position.copyFrom(value);
     }
 
@@ -614,7 +611,7 @@ export class DisplayObject extends EventEmitter
 
     set scale(value) // eslint-disable-line require-jsdoc
     {
-        window.pixiChanged ||= !this.transform.scale.equals(value);
+        PIXI.pixiChanged = PIXI.pixiChanged || (!this.transform.scale.equals(value));
         this.transform.scale.copyFrom(value);
     }
 
@@ -631,7 +628,7 @@ export class DisplayObject extends EventEmitter
 
     set pivot(value) // eslint-disable-line require-jsdoc
     {
-        window.pixiChanged ||= !this.transform.pivot.equals(value);
+        PIXI.pixiChanged = PIXI.pixiChanged || (!this.transform.pivot.equals(value));
         this.transform.pivot.copyFrom(value);
     }
 
@@ -648,7 +645,7 @@ export class DisplayObject extends EventEmitter
 
     set skew(value) // eslint-disable-line require-jsdoc
     {
-        window.pixiChanged ||= !this.transform.skew.equals(value);
+        PIXI.pixiChanged = PIXI.pixiChanged || (!this.transform.skew.equals(value));
         this.transform.skew.copyFrom(value);
     }
 
@@ -665,7 +662,7 @@ export class DisplayObject extends EventEmitter
 
     set rotation(value) // eslint-disable-line require-jsdoc
     {
-        window.pixiChanged ||= this.transform.rotation !== value;
+        PIXI.pixiChanged = PIXI.pixiChanged || (this.transform.rotation !== value);
         this.transform.rotation = value;
     }
 
@@ -682,7 +679,7 @@ export class DisplayObject extends EventEmitter
 
     set angle(value) // eslint-disable-line require-jsdoc
     {
-        window.pixiChanged ||= this.rotation !== (value * DEG_TO_RAD);
+        PIXI.pixiChanged = PIXI.pixiChanged || (this.rotation !== (value * DEG_TO_RAD));
         this.transform.rotation = value * DEG_TO_RAD;
     }
 
@@ -701,7 +698,7 @@ export class DisplayObject extends EventEmitter
 
     set zIndex(value) // eslint-disable-line require-jsdoc
     {
-        window.pixiChanged ||= this.zIndex !== value;
+        PIXI.pixiChanged = PIXI.pixiChanged || (this.zIndex !== value);
         this._zIndex = value;
         if (this.parent)
         {
@@ -758,7 +755,7 @@ export class DisplayObject extends EventEmitter
 
     set mask(value) // eslint-disable-line require-jsdoc
     {
-        window.pixiChanged ||= true;
+        PIXI.pixiChanged = PIXI.pixiChanged || (true);
         if (this._mask)
         {
             const maskObject = this._mask.maskObject || this._mask;
