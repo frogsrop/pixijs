@@ -165,6 +165,7 @@ export class Transform
      */
     protected onChange(): void
     {
+        (window as any).pixiChanged = true;
         this._localID++;
     }
 
@@ -275,6 +276,7 @@ export class Transform
 
     set rotation(value) // eslint-disable-line require-jsdoc
     {
+        (window as any).pixiChanged = (window as any).pixiChanged || (this._rotation !== value);
         if (this._rotation !== value)
         {
             this._rotation = value;

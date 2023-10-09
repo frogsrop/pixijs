@@ -198,6 +198,8 @@ export class Sprite extends Container
      */
     _onTextureUpdate()
     {
+        window.pixiChanged = true;
+
         this._textureID = -1;
         this._textureTrimmedID = -1;
         this._cachedTint = 0xFFFFFF;
@@ -212,7 +214,7 @@ export class Sprite extends Container
         {
             this.scale.y = sign(this.scale.y) * this._height / this._texture.orig.height;
         }
-        PIXI.pixiChanged = true;
+        window.pixiChanged = true;
     }
 
     /**
@@ -224,7 +226,7 @@ export class Sprite extends Container
     {
         this._transformID = -1;
         this._transformTrimmedID = -1;
-        PIXI.pixiChanged = true;
+        window.pixiChanged = true;
     }
 
     /**
@@ -535,7 +537,7 @@ export class Sprite extends Container
         {
             this._transformID = -1;
         }
-        PIXI.pixiChanged = PIXI.pixiChanged || (this._roundPixels !== value);
+        window.pixiChanged = window.pixiChanged || (this._roundPixels !== value);
         this._roundPixels = value;
     }
 
@@ -559,7 +561,7 @@ export class Sprite extends Container
         const s = sign(this.scale.x) || 1;
 
         this.scale.x = s * value / this._texture.orig.width;
-        PIXI.pixiChanged = PIXI.pixiChanged || (this._width !== value);
+        window.pixiChanged = window.pixiChanged || (this._width !== value);
         this._width = value;
     }
 
@@ -578,7 +580,7 @@ export class Sprite extends Container
         const s = sign(this.scale.y) || 1;
 
         this.scale.y = s * value / this._texture.orig.height;
-        PIXI.pixiChanged = PIXI.pixiChanged || (this._height !== value);
+        window.pixiChanged = window.pixiChanged || (this._height !== value);
         this._height = value;
     }
 
@@ -607,7 +609,7 @@ export class Sprite extends Container
 
     set anchor(value) // eslint-disable-line require-jsdoc
     {
-        PIXI.pixiChanged = !this._anchor.equals(value);
+        window.pixiChanged = !this._anchor.equals(value);
         this._anchor.copyFrom(value);
     }
 
@@ -625,7 +627,7 @@ export class Sprite extends Container
 
     set tint(value) // eslint-disable-line require-jsdoc
     {
-        PIXI.pixiChanged = PIXI.pixiChanged || (this._tint !== value);
+        window.pixiChanged = window.pixiChanged || (this._tint !== value);
         this._tint = value;
         this._tintRGB = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
     }
@@ -645,8 +647,6 @@ export class Sprite extends Container
         if (this._texture === value)
         {
             return;
-        } else {
-            PIXI.pixiChanged = true;
         }
 
         if (this._texture)

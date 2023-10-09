@@ -48,13 +48,7 @@ export class DisplayObject extends EventEmitter
         this.tempDisplayObjectParent = null;
 
         // TODO: need to create Transform from factory
-        /**
-         * World transform and local transform of this object.
-         * This will become read-only later, please do not assign anything there unless you know what are you doing.
-         *
-         * @member {PIXI.Transform}
-         */
-        this.transform = new Transform();
+        this._transform = new Transform();
 
         this._alpha = 1;
 
@@ -170,6 +164,30 @@ export class DisplayObject extends EventEmitter
          */
         this.isMask = false;
     }
+
+    /**
+     * World transform and local transform of this object.
+     * This will become read-only later, please do not assign anything there unless you know what are you doing.
+     *
+     * @member {PIXI.Transform}
+     */
+    get transform() {
+        return this._transform;
+    }
+    set transform(value) {
+        window.pixiChanged = window.pixiChanged ||
+        (this._transform.position.x !== value.position.x) ||
+        (this._transform.position.y !== value.position.y) ||
+        (this._transform.scale.x !== value.scale.x) ||
+        (this._transform.scale.y !== value.scale.y) ||
+        (this._transform.rotation !== value.rotation) ||
+        (this._transform.skew.x !== value.skew.x) ||
+        (this._transform.skew.y !== value.skew.y) ||
+        (this._transform.pivot.x !== value.pivot.x) ||
+        (this._transform.pivot.y !== value.pivot.y);
+        this._transform = value;
+    }
+
     /**
      * The visibility of the object. If false the object will not be drawn, and
      * the updateTransform function will not be called.
@@ -184,7 +202,7 @@ export class DisplayObject extends EventEmitter
     }
     set visible(value) // eslint-disable-line require-jsdoc
     {
-        PIXI.pixiChanged = PIXI.pixiChanged || (this._visible !== value);
+        window.pixiChanged = window.pixiChanged || (this._visible !== value);
         this._visible = value;
     }
     /**
@@ -201,7 +219,7 @@ export class DisplayObject extends EventEmitter
     }
     set renderable(value) // eslint-disable-line require-jsdoc
     {
-        PIXI.pixiChanged = PIXI.pixiChanged || (this._renderable !== value);
+        window.pixiChanged = window.pixiChanged || (this._renderable !== value);
         this._renderable = value;
     }
     /**
@@ -215,7 +233,7 @@ export class DisplayObject extends EventEmitter
     }
     set alpha(value) // eslint-disable-line require-jsdoc
     {
-        PIXI.pixiChanged = PIXI.pixiChanged || (this._alpha !== value);
+        window.pixiChanged = window.pixiChanged || (this._alpha !== value);
         this._alpha = value;
     }
 
@@ -470,7 +488,7 @@ export class DisplayObject extends EventEmitter
      */
     setTransform(x = 0, y = 0, scaleX = 1, scaleY = 1, rotation = 0, skewX = 0, skewY = 0, pivotX = 0, pivotY = 0)
     {
-        PIXI.pixiChanged =
+        window.pixiChanged = window.pixiChanged ||
             (this.position.x !== x) ||
             (this.position.y !== y) ||
             (this.scale.x !== (!scaleX ? 1 : scaleX)) ||
@@ -538,7 +556,7 @@ export class DisplayObject extends EventEmitter
 
     set x(value) // eslint-disable-line require-jsdoc
     {
-        PIXI.pixiChanged = PIXI.pixiChanged || (this.transform.position.x !== value);
+        window.pixiChanged = window.pixiChanged || (this.transform.position.x !== value);
         this.transform.position.x = value;
     }
 
@@ -555,7 +573,7 @@ export class DisplayObject extends EventEmitter
 
     set y(value) // eslint-disable-line require-jsdoc
     {
-        PIXI.pixiChanged = PIXI.pixiChanged || (this.transform.position.y !== value);
+        window.pixiChanged = window.pixiChanged || (this.transform.position.y !== value);
         this.transform.position.y = value;
     }
 
@@ -594,7 +612,7 @@ export class DisplayObject extends EventEmitter
 
     set position(value) // eslint-disable-line require-jsdoc
     {
-        PIXI.pixiChanged = PIXI.pixiChanged || (!this.transform.position.equals(value));
+        window.pixiChanged = window.pixiChanged || (!this.transform.position.equals(value));
         this.transform.position.copyFrom(value);
     }
 
@@ -611,7 +629,7 @@ export class DisplayObject extends EventEmitter
 
     set scale(value) // eslint-disable-line require-jsdoc
     {
-        PIXI.pixiChanged = PIXI.pixiChanged || (!this.transform.scale.equals(value));
+        window.pixiChanged = window.pixiChanged || (!this.transform.scale.equals(value));
         this.transform.scale.copyFrom(value);
     }
 
@@ -628,7 +646,7 @@ export class DisplayObject extends EventEmitter
 
     set pivot(value) // eslint-disable-line require-jsdoc
     {
-        PIXI.pixiChanged = PIXI.pixiChanged || (!this.transform.pivot.equals(value));
+        window.pixiChanged = window.pixiChanged || (!this.transform.pivot.equals(value));
         this.transform.pivot.copyFrom(value);
     }
 
@@ -645,7 +663,7 @@ export class DisplayObject extends EventEmitter
 
     set skew(value) // eslint-disable-line require-jsdoc
     {
-        PIXI.pixiChanged = PIXI.pixiChanged || (!this.transform.skew.equals(value));
+        window.pixiChanged = window.pixiChanged || (!this.transform.skew.equals(value));
         this.transform.skew.copyFrom(value);
     }
 
@@ -662,7 +680,7 @@ export class DisplayObject extends EventEmitter
 
     set rotation(value) // eslint-disable-line require-jsdoc
     {
-        PIXI.pixiChanged = PIXI.pixiChanged || (this.transform.rotation !== value);
+        window.pixiChanged = window.pixiChanged || (this.transform.rotation !== value);
         this.transform.rotation = value;
     }
 
@@ -679,7 +697,7 @@ export class DisplayObject extends EventEmitter
 
     set angle(value) // eslint-disable-line require-jsdoc
     {
-        PIXI.pixiChanged = PIXI.pixiChanged || (this.rotation !== (value * DEG_TO_RAD));
+        window.pixiChanged = window.pixiChanged || (this.transform.rotation !== (value * DEG_TO_RAD));
         this.transform.rotation = value * DEG_TO_RAD;
     }
 
@@ -698,7 +716,7 @@ export class DisplayObject extends EventEmitter
 
     set zIndex(value) // eslint-disable-line require-jsdoc
     {
-        PIXI.pixiChanged = PIXI.pixiChanged || (this.zIndex !== value);
+        window.pixiChanged = window.pixiChanged || (this._zIndex !== value);
         this._zIndex = value;
         if (this.parent)
         {
@@ -755,7 +773,7 @@ export class DisplayObject extends EventEmitter
 
     set mask(value) // eslint-disable-line require-jsdoc
     {
-        PIXI.pixiChanged = PIXI.pixiChanged || (true);
+        window.pixiChanged = window.pixiChanged || (true);
         if (this._mask)
         {
             const maskObject = this._mask.maskObject || this._mask;

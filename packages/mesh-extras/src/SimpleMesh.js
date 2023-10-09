@@ -45,6 +45,7 @@ export class SimpleMesh extends Mesh
     }
     set vertices(value)
     {
+        window.pixiChanged = true;
         this.geometry.getBuffer('aVertexPosition').data = value;
     }
 
